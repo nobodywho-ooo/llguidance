@@ -80,10 +80,10 @@ mod lark;
 
 pub use regex_rewrite::regex_to_lark;
 
-#[cfg(feature = "wasm")]
-pub use instant::Instant;
+#[cfg(all(target_family = "wasm", any(target_os = "unknown", target_os = "none")))]
+pub use web_time::Instant;
 
-#[cfg(not(feature = "wasm"))]
+#[cfg(not(all(target_family = "wasm", any(target_os = "unknown", target_os = "none"))))]
 pub use std::time::Instant;
 
 #[macro_export]

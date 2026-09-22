@@ -23,7 +23,12 @@ rayon = { version = "1.10.0", optional = true }
 jsonschema = { version = "0.29.0", default-features = false, optional = true }
 lazy_static = { version = "1.5.0", optional = true }
 
-instant = { version = "0.1.13", optional = true }
+# Assume the WASM targets are Web targets.
+# wasm32-unknown-unknown and wasm32v1-none, but not Emscripten or WASI.
+[target.'cfg(all(target_family = "wasm", any(target_os = "unknown", target_os = "none")))'.dependencies]
+web-time = "1.1.0"
+getrandom_03 = { package = "getrandom", version = "0.3.3", features = ["wasm_js"] }
+getrandom = { version = "0.4.3", features = ["wasm_js"] }
 
 [lib]
 crate-type = ["staticlib", "rlib", "cdylib"]
@@ -37,7 +42,6 @@ logging = []                                                  # this is extensiv
 lark = []                                                     # ~115k (binary)
 jsonschema_validation = ["dep:jsonschema", "dep:lazy_static"] # ~2.5M (binary)
 rayon = ["dep:rayon"]
-wasm = ["dep:instant"]
 referencing = ["dep:referencing"]
 ahash = ["derivre/ahash"]
 # Regenerate parser/llguidance.h: cargo check -p llguidance --features generate-header
